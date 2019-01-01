@@ -24,13 +24,11 @@ int main(){
 		scanf("%s %c %s %d",temp.name,&temp.gender,temp.ID,&temp.grade);
 		if((temp.gender=='F') && (temp.grade > fe.grade)){
 			fe = temp;
-			flag1 = 1;
-			cout<<"---------------------"<<endl;
+			flag1 = 1;//因为一个等号不是赋值而是比较 
 		}
 		else if((temp.gender ==  'M') && (temp.grade < ma.grade)){
 			ma = temp;
 			flag2 = 1;
-			cout<<"---------------------"<<endl;
 		}
 	}
 	if(flag1 ==0){
