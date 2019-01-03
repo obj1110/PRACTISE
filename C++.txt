@@ -54,3 +54,174 @@ str1[i-1] = (str2[i-1] - str1[i-1])>=0?(str2[i-1]-str1[i-1]+'0'):(str2[i-1]-str1
 13. 关于堆栈的使用我们可是曾经学过啊，使用一个数组结合一个指针来模拟堆栈。
 
 14. 有些剪枝操作是必不可少的，必须留着
+
+15. strcmp的使用前提是对于这个const char*类型的元素。所以有些时候char []中的元素无法参与比较。而是要用双等号来比较。
+同样的strcpy的使用也是需要const char*类型的元素，所以有些时候char[] 中的元素无法参与赋值。而是要用等号赋值。
+
+16. scanf对于char[]数组类型的读取并不需要使用&符号，而是使用数组名即可。
+
+17. 对于reverse的使用目前见到过三种形式，一种是reverse(array.begin(),array.end());
+一种是reverse(begin(array),end(array));
+还有一种是reverse(array,array+strlen(array));
+
+18. 
+strcpy(destination,source)
+strnpy(destination,source,size_t n) 也就是将指定的n个字符移动到某一个位置
+
+substr函数
+string substr(size_t pos =0, size_t len = npos) const;
+
+find函数
+std::string str = str2.find(3,5); //将一个子串赋值给一个新串
+
+对于一行一行的数据的读取
+在大型的while循环中，getchar()读取的是换行符，然后使用gets来读取一行，直到换行符/n为止
+for(int i=0;i<n;i++){
+	getchar();//
+	gets(array_name);
+}
+
+cin.getline(array_name,size_t end_position,'/');
+也就是三个参数，一个是数组的名字，一个是未知，一个是换行标志,这是一种文件流读取方式
+char ch[20];
+cout<<"enter a sentence:"<<endl;
+cin>>ch;
+cout<<"The string read with cin is:"<<ch<<endl;
+cin.getline(ch,20,'/');  //读个字符或遇'/'结束
+cout<<"The second part is:"<<ch<<endl;
+cin.getline(ch,20);  //读个字符或遇'/n'结束
+cout<<"The third part is:"<<ch<<endl;
+
+19. 字符读取函数
+1、cin 
+2、cin.get() 
+3、cin.getline() 
+4、getline() 
+5、gets() 
+6、getchar()
+
+附:cin.ignore();cin.get()//跳过一个字符,例如不想要的回车,空格等字符
+
+cin 遇“空格”、“TAB”、“回车”都结束  /b /t /n
+
+cin.get(char_name)
+cin.getchar(char[]_name,size_t n) 可以接收空格
+
+cin.get() 相当于是无参数的getchar
+
+cin.getline(char[]_name,size_t n)   // 接受一个字符串，可以接收空格并输出,默认的3号参数是/n
+
+getline()     // 接受一个字符串，可以接收空格并输出，需包含“#include<string>”
+
+
+
+第一种：?在<istream>中的getline()函数有两种重载形式：
+
+istream& getline (char* s, streamsize n );
+istream& getline (char* s, streamsize n, char delim );
+
+作用是：?从istream中读取至多n个字符(包含结束标记符)保存在s对应的数组中。即使还没读够n个字符，
+
+std::cin.getline(name, 6, '#');
+将输入流输入到name数组中，然后读取长度为6个或者读取到了'#'
+
+如果遇到delim或字数达到限制，则读取终止，delim都不会被保存进s对应的数组中
+
+第二种：?在<string>中的getline函数有四种重载形式：【STL】
+
+istream& getline (istream& ?is, string& str, char delim);
+istream& getline (istream&& is, string& str, char delim);
+istream& getline (istream& ?is, string& str);
+
+istream& getline (istream&& is, string& str);
+用法和上第一种类似，但是读取的istream是作为参数is传进函数的。读取的字符串保存在string类型的str中。
+--------------------- 
+
+
+(EOF是C语言中为了区分有效数据和输入结束符的。
+
+EOF的输入由系统锁定。windows下是ctrl+z,linux/unix下是ctrl+d。)
+
+getline不是C库函数，而是C++库函数。它遇到以下情况发生会导致生成的本字符串结束：
+
+(1)到文件结束，(2)遇到函数的定界符，(3)输入达到最大限度。
+
+
+gets本身是一个C的函数，所以在C11中被替换为fgets
+
+20。 substr一定是要用两个size_t作为参数，而且可以用find进行辅助寻找位置
+
+
+21.
+char num[12];
+strcpy(num,'a'); 非法
+strcpy(num,temp); 合法
+
+22. 对结构体数组的快速定义
+struct student{
+	int chinese;
+	int math;
+	int english;
+	char id[20];
+}Students[1010];这种快速定义的犯法
+
+23. 排序题必须做的就是引入algorithm和主动构造一个排序函数cmp函数，而且这种题一般都是要定义结构体数组的。
+emmmmm不过目前并不明确，如果说要升序的话该怎么办。
+
+24. 注意C++的编译器对于== 还是=不会作出明确的反馈，也就是说，有些错误明确的就是因为本来应该用=的地方用了==，然后就错了。
+GCC不会对这种错误做任何的反映。务必最高注意！！
+
+25. PAT的测试大多数都是要求最后不能出现空格或者换行符之类的东西的，所以你要特别注意啊
+
+26.     //实践证明，这种说法还是很有用也是很可行的。 
+    else return strcmp(a.id,b.id)<0; 
+	字符数组的比较必须要用到strcmp这种感觉的东西，而对于字符串的比较就可以直接用大于小于。
+	
+1234567890001 95
+1234567890005 100
+1234567890003 95
+1234567890002 77
+1234567890004 85
+
+这种字符串的比较就是可以用strcmp来比较
+
+
+27. int 可以表示的范围至少是2*10的10次方这么大的东西。
+所以如果数据最多是一个9位的整数或者是一个1*10^10，你完全是可以用int的
+
+28. 特别注意！！！！！
+if(stu[i].id == a) 和 if(strcmp(stu[i].id,a))这两种情况，以后所有的字符串比较，所有的字符串比较，优先使用strcmp而不是那个狗屎==号！！！！
+
+
+
+29. 调用sort()排序是最好的结果，目前的能力，解决1029很难。
+
+30. 字符数组的元素的scanf是要求你使用scanf("%s",array_name[i])
+而数字数组的元素的scanf要求你使用scanf("%d",&array_name[i]);
+
+
+31. （1）itoa函数————————功能：把一整数转换为字符串
+2）atoi函数————功能：把字符串转换成整型
+
+32. 在C11中，变成了std::to_string
+std::string =  std::to_string(number);
+
+strlen(const char* ) 
+C11中的string专门STL的容器，应该使用.Length()属性进行查看
+
+33. 一旦涉及到了对于cmp函数的定义，那重点一定是sort的构造和使用
+
+34. 做不出来的时候，首先按照暴力进行求解，别告诉我是dp问题
+
+35. string.erase(size_t a,size_t b);
+
+string& erase (size_t pos = 0, size_t len = npos);
+也就是从a的位置开始移除b长度的数组
+
+
+36. 关于string.strlen()和string.size()的情况
+.size()是STL容器函数
+.length()是string专属函数
+
+min[0] == "0" 编译错误，因为min[0]是字符不是字符串
+min[0] == '0' 对
