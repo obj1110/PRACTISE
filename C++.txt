@@ -517,10 +517,33 @@ cin.get(char_name) 用来接收字符
  1048为何会产生段错误？很简单，你虽然硬币最大是500的，但是你很大几率会涉及到大于500的面额，这个时候虽然是不存在的，但是你会默认去访问hash[m-i]这个是时候就是数组段错误了。解决办法有两个，一个是用大的hash数组，另一个是用if循环对m-i进行判断，一定要小于500
  
  
- 分治
+ 分治
  递归 不断调用自己
  回溯 递归的剪枝操作
  迭代 循环操作
  
 45
-N皇后的问题就是递归全排列问题
+N皇后的问题就是递归全排列问题，但是不同的hashTable的作用不同。在全排列里面表示哪一个数字已经被使用了。但是在N皇后里面表示哪一行已经有皇后了。
+
+46 
+cin.get(char_name);
+char_name = cin.get();
+
+cin.getline(array_name,maxsize);
+cin.get(array_name,maxsize);
+
+cin.get(NULL);  //专门用于接收空格。
+
+upper_bound和lower_bound的使用
+lower_返回的是第一个>=key的指针，这个元素不比key小
+upper_返回的是第一个<key的指针，这个元素大于key。
+如果想要获取位置，要减去array这个数组,得到int
+
+lower_bound
+三种返回结果，一种是0，也就是所有的元素都大于等于你的key，一种是不越界的位置，最后一种是last越界位置，表示所有的值都小于你的key值。
+upper_bound返回查找元素的第一个可安插位置，也就是“元素值>查找值”的第一个元素的位置
+这两个函数都是基于二分查找的。并且查找区间左闭右开。
+
+lower_bound( array_name+lower_bound , array_name+upper_bound ,key值)
+
+binary_search(int array[],int size,int key) STL二分查找模板，最后返回middle或者是返回-1(没找到)
