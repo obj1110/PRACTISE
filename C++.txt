@@ -546,4 +546,9 @@ upper_bound返回查找元素的第一个可安插位置，也就是“元素值>查找值”的第一个元素的
 
 lower_bound( array_name+lower_bound , array_name+upper_bound ,key值)
 
-binary_search(int array[],int size,int key) STL二分查找模板，最后返回middle或者是返回-1(没找到)
+binary_search(int array[],int size,int key) STL二分查找模板，最后返回middle或者是返回-1(没找到)  左闭右开区间。。。。
+
+算法所操作的区间,是左闭右开区间,还是左闭右闭区间,这个区间,需要在循环初始化,循环体是否终止的判断中,以及每次修改left,right区间值这三个地方保持一致,否则就可能出错.
+这句话怎么理解，理解方式就是，这个函数是反复使用的，对吧，你第一次如果没有找到结果，如果你本身是双闭的，那么你第二次1也应该是双闭的，如果你的函数本来是双开的函数，但是你循环第二次之后变成了对于双闭区间的使用，这就会出错，轻一点的结果错误，严重的就是死循环。这也就是说，所有的递归函数，每次使用的条件都应该是一样的。
+也就是说，双闭，可以是right = mid -1 ，但是双开，就是right = mid
+而且mid也不是随便选的，不是说(left+right)/2，而是推荐使用left +(right-left)/2
