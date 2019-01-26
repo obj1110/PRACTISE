@@ -552,3 +552,6 @@ binary_search(int array[],int size,int key) STL¶þ·Ö²éÕÒÄ£°å£¬×îºó·µ»Ømiddle»òÕßÊ
 Õâ¾ä»°ÔõÃ´Àí½â£¬Àí½â·½Ê½¾ÍÊÇ£¬Õâ¸öº¯ÊýÊÇ·´¸´Ê¹ÓÃµÄ£¬¶Ô°É£¬ÄãµÚÒ»´ÎÈç¹ûÃ»ÓÐÕÒµ½½á¹û£¬Èç¹ûÄã±¾ÉíÊÇË«±ÕµÄ£¬ÄÇÃ´ÄãµÚ¶þ´Î1Ò²Ó¦¸ÃÊÇË«±ÕµÄ£¬Èç¹ûÄãµÄº¯Êý±¾À´ÊÇË«¿ªµÄº¯Êý£¬µ«ÊÇÄãÑ­»·µÚ¶þ´ÎÖ®ºó±ä³ÉÁË¶ÔÓÚË«±ÕÇø¼äµÄÊ¹ÓÃ£¬Õâ¾Í»á³ö´í£¬ÇáÒ»µãµÄ½á¹û´íÎó£¬ÑÏÖØµÄ¾ÍÊÇËÀÑ­»·¡£ÕâÒ²¾ÍÊÇËµ£¬ËùÓÐµÄµÝ¹éº¯Êý£¬Ã¿´ÎÊ¹ÓÃµÄÌõ¼þ¶¼Ó¦¸ÃÊÇÒ»ÑùµÄ¡£
 Ò²¾ÍÊÇËµ£¬Ë«±Õ£¬¿ÉÒÔÊÇright = mid -1 £¬µ«ÊÇË«¿ª£¬¾ÍÊÇright = mid
 ¶øÇÒmidÒ²²»ÊÇËæ±ãÑ¡µÄ£¬²»ÊÇËµ(left+right)/2£¬¶øÊÇÍÆ¼öÊ¹ÓÃleft +(right-left)/2
+
+
+iterator³ýÁË½øÐÐ++,--²Ù×÷£¬¿ÉÒÔ½«iter+n,iter-n¸³¸øÒ»¸öÐÂµÄiteraor¶ÔÏó¡£»¹¿ÉÒÔÊ¹ÓÃÒ»¸öiterator¼õÈ¥ÁíÍâÒ»¸öiterator.

@@ -1,39 +1,53 @@
 #include<iostream>
 #include<algorithm>
-#include<cstring>
+#include<cstring> 
+
 using namespace std;
 
-const int maxn  = 100100;
+const int maxn = 100100;
 int sum[maxn];
-
-//左闭右开区间 
-int upper_bound(int L,int R,int x){
-	int left = L;
-	int right = R;
-	while(left<right){
-		mid = (left + right)/2;
-		if(sum[mid] > x) right = mid;
-		else left = mid + 1;
+ 
+int upper_bound(int left,int right,int key){
+	int l = left;
+	int r = right;
+	while(l<r){
+		int mid = l + (r-l)/2;
+		if(sum[mid] > key) r= mid;
+		else l =  mid + 1; 
 	}
 	return left;
 }
-//大于key的元素其实是一个区间，你要做的就是返回这个区间中第一个值，也就是下界 
+
 int main(){
-	memset(sum,sum+maxn,0);
-	
-	int n,m;
-	scanf("%d %d",&n,&m);
-	scanf("%d",&sum[0]);
-	
+	//n是元素的数目，s是价格，mins是最小的价格。 
+	int n,s,mins=0xffffff;
+	scanf("%d %d",&n,&s);
+	scanf("%d",&sum[0]);	
 	for(int i=1;i<n;i++){
 		scanf("%d",&sum[i]);
 		sum[i] += sum[i-1];
 	}
+	for(int left = 0;left<n;left++){
+		int right = upper_bound(left,n,sum[left]+s);
+		if(sum[right+1] - sum[left] ==s){
+			mins = s; 
+			break;	
+		} 
+		else if(right <n && sum[right] - sum[left] < mins){
+			mins = sum[right+1] - sum[left];
+		}
+	}
 	
-	for(int i=1 ; i<=n ; i++){
-		int j = upper_bound(i , n , sum[i-1] +S ); 
+	cout<<"mins:"<<mins<<endl;
+	
+	for(int left = 0;left<n;left++){
+		int right = upper_bound(left,n,sum[left]+mins);
+		if(sum[right] - sum[left] == mins){
+			printf("%d-%d\n",left,right);
+		}
 	} 
-	
-	
 	return 0;
-}
+} 
+
+
+
