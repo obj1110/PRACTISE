@@ -1,13 +1,29 @@
-#include<iostream> 
+#include<iostream>
+#include<cmath>
+#include<cstring>
+#include<algorithm>
+#include<time>
+
 using namespace std;
+
+struct bign{
+	int d[1000];
+	int length;
+	bign() {
+		memset(d,0,sizeof(d));
+		len = 0;
+	}
+}
+
+bign convert(char s[]) {
+	bign a;
+	a.length = strlen(s);
+	for(int i=0;i<a.length;i++){
+		a.d[i] = str[a.len - i -1] -'0';
+	}
+	return a;
+}
+
 int main(){
-	char str[40];
-	char temp[40];
-	int a;
-	char sen[40] = "ren is 23 years old.";
-	sscanf(sen,"%s %s %d",str,temp,&a);
-	char str2[40];
-	sprintf(str2,"%s -> %d",str,a);
-	printf("%s",str2);
-	return 0;
+	
 }
