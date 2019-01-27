@@ -1,43 +1,65 @@
 #include<iostream> 
 #include<algorithm>
-#include<vector> 
+#include<cstdlib>
+#include<cstring>
+#include<string>
+#include<vector>
+#include<map>
+#include<cmath>
 
 using namespace std;
 
-void merge(int array[],int length){
-	int gap;
-	for(gap=1;gap<=length;gap*=2){
-		for(int i=0;i<length;i+=gap){
-			
-			int j = i+2*gap;			
-			if(j>length) j = length;
-			//sort自己是一个左闭右开的东西 
-			sort(array+i,array+j);	
-			if (j == length) break;			
+const int size = 1000100;
+
+int merge(int a[],int b[],int c[],int n ,int m){
+	int i = 0;
+	int j = 0;
+	int index = 0;
+	while (i<n && j<m){
+		if(a[i] < b[j]){
+			c[index++] = a[i++];
 		}
-		//输出每一步的结果
-		cout<<"gap:"<<gap<<endl;
-		for(int i=0;i<length;i++){
-			printf("%d",array[i]);
-			if(i!=length-1) printf(" ");
+		else {
+			c[index++] = b[j++];
 		}
-		printf("\n");
-	} 
+	}
+	while(i<n) c[index++] =  a[i++];
+	while(j<m) c[index++] =  b[j++];
+	return index;
+} 
+
+const int maxn = 110;
+//此处的l2就是r1+1 
+void merge_guibing(int a[],int l1,int r1,int l2,int r2){
+	int i = l1;
+	int j = l2;
+	int temp[maxn],index = 0;
+	while(i <= r1 && j <= r2){
+		if(a[i] < a[j]) temp[index++] = a[i++];
+		else temp[index++] = a[j++];
+	}
+	while(i <= r1 ) temp[index++] = a[i++];
+	while(j <= r2 ) temp[index++] = a[j++];
+	for(int x=  0;x<index;x++) {
+		a[l1+x] = temp[x++];
+ 	}
+}
+void mergeSort(int a[],int left, int right){
+	if(left<right){
+		int mid = left + (right-left)/2;
+		mergeSort(a,left,mid);
+		mergeSort(a,mid+1,right);
+		merge_guibing(a , left , mid , mid+1 , right);
+	}
 }
 
 int main(){
-	
-	int a[20] = {11,0,4,5,1,6,7,2,8,3,9};
-	int b[20] = {1,2,3,4,5,6,7,8,9,0,10};
-	//直接输出a的情况 
-	printf("原始序列\n");
-	int length =  sizeof(a)/sizeof(a[0]); 
-	for(int i=0; i < length ;i++){
-			printf("%d",a[i]);
-			if(i!=length-1) printf(" ");
-		}
-	printf("\n");
-		
-	merge(a,11);
-	getchar();
+	int a[] = {9,4,3,6,2,8,1,0,7,5};
+	mergeSort(a,0,10);
+	vector<int> ve (begin(a),end(a));
+	vector<int>::iterator ite;
+	for(ite = ve.begin();ite!=ve.end();ite++){
+		cout<<*ite<<" ";
+	} 
+	cout<<endl;
 }
