@@ -19,6 +19,10 @@ string dec_[13] = {"","tam","hel","maa","huh","tou","kes","hei","elo","syy","lok
 //map定义错了，实际上应该是由string转int这样的，key是string，value是int 
 //为什么用map，就是因为string映射到int没法用数组实现，用结构体实现太麻烦
 //map就是类型和类型间的映射关系的建立者 
+
+//Zero on Earth is called "tret" on Mars.
+//由于0是4位的所以就很麻烦了
+ 
 map<string,int> mpf;
 
 void Init(){
@@ -35,19 +39,19 @@ void Init(){
 	mpf["oct"] = 10;
 	mpf["nov"] = 11;
 	mpf["dec"] = 12;
-	mpf["tret"] = 13;
-	mpf["tam"] = 26;
-	mpf["hel"] = 39;
-	mpf["maa"] = 52;
-	mpf["huh"] = 65;
-	mpf["tou"] = 78;
-	mpf["kes"] = 91;
-	mpf["hei"] = 104;
-	mpf["elo"] = 117;
-	mpf["syy"] = 130;
-	mpf["lok"] = 143;
-	mpf["mer"] = 156;
-	mpf["jou"] = 169;
+	mpf["tret"] = 0;
+	mpf["tam"] = 13;
+	mpf["hel"] = 26;
+	mpf["maa"] = 39;
+	mpf["huh"] = 52;
+	mpf["tou"] = 65;
+	mpf["kes"] = 78;
+	mpf["hei"] = 91;
+	mpf["elo"] = 104;
+	mpf["syy"] = 117;
+	mpf["lok"] = 130;
+	mpf["mer"] = 143;
+	mpf["jou"] = 156;
 //	mpf[0] = "tret";
 //	mpf[1] = "jan";
 //	mpf[2] = "feb";
@@ -78,16 +82,22 @@ void Init(){
 }
 
 int StringToNumber(string str) {
-
 	int length = str.size();
 	int value = 0;
-	if(length > 4){
+	if(length == 7){
 		string substr = str.substr(0,3);
 		value +=  mpf[substr];
 		substr = str.substr(4,3);
 		value += mpf[substr];
 	}
-	else{
+	else if(length == 3){
+		string substr = str.substr(0,3);
+		value += mpf[substr];
+	}
+	else if(length == 4 || length ==9){
+		value = 0;
+	}
+	else if(length == 8 ){
 		string substr = str.substr(0,3);
 		value += mpf[substr];
 	}
@@ -95,9 +105,24 @@ int StringToNumber(string str) {
 }
 
 string NumberToString(int num){
+	if(num ==0){
+		return "tret";
+	}
+	
 	string str = dec_[num/13];
-	if(str != "") str+= " ";
-	str += one[num%13];
+	if(num%13 != 0 && str != "") {
+		if(str != "") str+= " ";
+		str += one[num%13];
+		return str;
+	}
+	else if(str == ""){
+		str += one[num%13];
+		return str;
+	}
+	else if(num%13 == 0){
+		return str;
+	}
+	//
 	return str;
 }
 
@@ -108,7 +133,10 @@ int main(){
 	cin>>n;
 	//
 	getchar();
-	
+	//
+	if(n==0){
+		return 0;
+	}
 	while(n--) {
 		//用第一位元素是不是数字来判断是不是数字 
 		string str;
