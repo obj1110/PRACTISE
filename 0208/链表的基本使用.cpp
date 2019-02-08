@@ -24,6 +24,17 @@ node* Create(int Array[]) {
 	//符合函数的定义 
 	return head;
 }
+//链表中寻找值为x的节点，返回界定啊的 = 
+int Search(node* head,int x) {
+	
+}
+
+void Insert(node* head,int x) {
+	
+}
+void Delete (node* head.int x){
+	
+}
 
 int main(){
 //	node* node1 = new node;
