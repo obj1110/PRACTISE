@@ -56,8 +56,7 @@ int main() {
 		//
 		while(flag){
 			//
-			//考虑 1 7 6 5 4 3 2 的情况要大于m-1 而不是大于m 
-			if(st_size > (m-1)){
+			if(st_size > m){
 				flag = false;
 				break;
 			}
