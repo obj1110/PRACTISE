@@ -4,6 +4,8 @@
 #include<algorithm>
 #include<set>
 
+//两个集合的比较，采用双指针的方法，必须一对一对的进行比价 
+
 using namespace std;
 const int maxn = 10010; 
 const int inf = 10010; 
