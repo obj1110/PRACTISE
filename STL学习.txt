@@ -1,0 +1,119 @@
+STL专门
+
+1. 使用begin和end之前都是要首先使用empty判断是不是空的，只有不空的集合才可以进行元素的输入和输出
+同样的，使用front或者是end的时候，也要判空。
+
+2. int set.count(int value)返回value在set中出现的次数情况   Returns the number of elements in the range [first,last) that compare equal to val.【适用于所有的容器】
+
+3. 一般STL中的结果都是左闭右开的，比如说lower_bound是左闭，也就是第一个大于等于key的元素的位置，比如说upper_bound是右开，也就是第一个大于key元素的位置。
+
+4. set中相同的元素只出现一次并且自动排序
+
+5. 映射关系 map unordered_map 和 char
+
+6. 
+数组元素的多少
+	sizeof (array)/sizeof(array[0])
+char[]的多少 
+	length 或者是 strlen
+STL容器的元素多少
+	size()
+
+7. reserve()
+一种是reverse(array.begin(),array.end());
+一种是reverse(begin(array),end(array));
+还有一种是reverse(array,array+strlen(array));
+
+8. find(ite begin ,ite end,int target_value)
+Returns an iterator to the first element in the range [first,last) that compares equal to val. If no such element is found, the function returns last.
+
+
+
+标准库的begin()和end()函数是C++11新标准引入的函数，可以对数组类型进行操作，返回其首尾指针，对标准库容器操作，返回相应迭代器。
+
+标准库容器的begin()和end()成员函数属于对应类的成员，返回的是对象容器的首尾迭代器。
+
+新标准库的begin()和end()函数可以让我们更容易的获取数组的首尾指针（注意尾指针是最后一个元素的下一个地址）
+
+简单来说，对于一个非容器数组，可以用begin()和end()来进行操作，对于容器数组可以用.begin和.end进行操作
+
+#include<iostream> 
+#include<cstdlib> 
+#include<algorithm> 
+using namespace std;
+int main(){
+	int array[100] = {1,2,3,5,6,7,3,1,2};
+	sort(begin(array),end(array));
+	for(auto it = begin(array);it!=end(array);it++){
+		cout<<*it<<endl;
+	}
+}
+但是问题就是，一般情况下你数组开的太大，所以用end会导致出现很多无意义的数字
+
+
+vector insert
+第一个位置是要插入位置的一个迭代器，第二个位置是插入的元素，或者是第二个第三个位置是一个范围性质的东西
+比如是一个数组的begin和end
+
+// inserting into a vector
+#include <iostream>
+#include <vector>
+
+int main ()
+{
+  std::vector<int> myvector (3,100);
+  std::vector<int>::iterator it;
+
+  it = myvector.begin();
+  it = myvector.insert ( it , 200 );
+
+  myvector.insert (it,2,300);
+
+  // "it" no longer valid, get a new one:
+  it = myvector.begin();
+
+  std::vector<int> anothervector (2,400);
+  myvector.insert (it+2,anothervector.begin(),anothervector.end());
+
+  int myarray [] = { 501,502,503 };
+  myvector.insert (myvector.begin(), myarray, myarray+3);
+
+  std::cout << "myvector contains:";
+  for (it=myvector.begin(); it<myvector.end(); it++)
+    std::cout << ' ' << *it;
+  std::cout << '\n';
+
+  return 0;
+}
+
+// set::insert (C++98)
+#include <iostream>
+#include <set>
+
+int main ()
+{
+  std::set<int> myset;
+  std::set<int>::iterator it;
+  std::pair<std::set<int>::iterator,bool> ret;
+
+  // set some initial values:
+  for (int i=1; i<=5; ++i) myset.insert(i*10);    // set: 10 20 30 40 50
+
+  ret = myset.insert(20);               // no new element inserted，因为set的元素都是唯一性的
+
+  if (ret.second==false) it=ret.first;  // "it" now points to element 20
+
+  myset.insert (it,25);                 // max efficiency inserting
+  myset.insert (it,24);                 // max efficiency inserting
+  myset.insert (it,26);                 // no max efficiency inserting
+
+  int myints[]= {5,10,15};              // 10 already in set, not inserted
+  myset.insert (myints,myints+3);       // 也就是插入某一个位置开始到另外一个位置
+
+  std::cout << "myset contains:";
+  for (it=myset.begin(); it!=myset.end(); ++it)
+    std::cout << ' ' << *it;
+  std::cout << '\n';
+
+  return 0;
+}

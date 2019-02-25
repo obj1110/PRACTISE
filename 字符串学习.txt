@@ -1,0 +1,172 @@
+1. strcmp的使用前提是对于这个const char*类型的元素。所以有些时候char []中的元素无法参与比较。而是要用双等号来比较。
+同样的strcpy的使用也是需要const char*类型的元素，所以有些时候char[] 中的元素无法参与赋值。而是要用等号赋值。
+
+2.  
+int strcmp ( const char * str1, const char * str2 );
+strcmp的结果
+大于0的，表示第一个不匹配的字符，在str2中的值比在str1中的值要大
+小于0的，表示第一个不匹配的字符在str2中的值比在str1中的值要小
+等于0的，表示两个字符串完全相等
+
+3. strcmp的使用，一定是要和0比较，因为最后的结果并不是一个简单的bool类型。
+strcmp可以比较两个字符数组 ，可比较 字符串常量 和 字符数组，不适用于STL容器
+==运算符可以比较字符串 字符数组 和 字符串常量
+
+4. 
+strcpy(destination,source)
+strnpy(destination,source,size_t n) 也就是将指定的n个字符移动到某一个位置
+
+5. string 容器函数
+substr(size_t start,size_t length);
+string str = find(size_t start,size_t length);
+
+6. sscanf()这个东西不用于输入输出，而是单纯用于对string进行操作
+/* sscanf example */
+#include <stdio.h>
+
+int main ()
+{
+  char sentence []="Rudolph is 12 years old";
+  char str [20];
+  int i;
+
+  sscanf (sentence,"%s %*s %d",str,&i);
+  printf ("%s -> %d\n",str,i);
+  
+  return 0;
+}
+7. substr(size_t start_position,size_t length)也就是一个字符串分割函数
+
+8. char * strcpy ( char * destination, const char * source );   返回的结果是一个指向destination的指针
+/* strcpy example */
+#include <stdio.h>
+#include <string.h>
+
+int main ()
+{
+  char str1[]="Sample string";
+  char str2[40];
+  char str3[40];
+  strcpy (str2,str1);
+  strcpy (str3,"copy successful");
+  printf ("str1: %s\nstr2: %s\nstr3: %s\n",str1,str2,str3);
+  return 0;
+}
+
+
+9.
+C++ 中有大量的函数用来操作以 null 结尾的字符串：
+
+序号	函数	    功能
+1	    strcpy(s1,s2)	复制字符串 s2 到字符串 s1
+2	    strcat(s1,s2)	连接字符串 s2 到字符串 s1 的末尾
+3	    strlen(s1)	    返回字符串 s1 的长度
+4	    strcmp(s1,s2)	返回s1与s2的比较结果
+5	    strchr(s1,ch)	返回一个指针，指向字符串s1中字符ch的第一次出现的位置
+6	    strstr(s1,s2)	返回一个指针，指向字符串s1中s2的第一次出现的位置
+
+C风格的字符串是用\0也就是NULL做结尾的，而这一点在C++中得到了继承
+
+C++ 标准库提供了 string 类类型，支持上述所有的操作，另外还增加了其他更多的功能。
+append() – 在字符串的末尾添加字符
+find() – 在字符串中查找字符串
+insert() – 插入字符
+length() – 返回字符串的长度
+replace() – 替换字符串
+substr() – 返回某个子字符串
+
+	int main(){
+		string str = "hello world!";
+		string str2 = "ren chunzhe";
+		str.append(str2);
+		cout<<str<<endl;
+	}
+
+	// string::find
+	#include <iostream>       // std::cout
+	#include <string>         // std::string
+	using namespace std;
+	int main ()
+	{
+	  std::string str = "There are two needles in this haystack with needles.";
+	  std::string str2  = "needle";
+
+	  // different member versions of find in the same order as above:
+	  // 注意find返回的结果是size_t 
+	  size_t found = str.find(str2);
+	  //如果最后还是找到了，因为返回的位置不是npos 
+	  if (found != string::npos)
+		std::cout << "first 'needle' found at: " << found << '\n';
+		
+	  found=str.find("needles are small",found+1,6);
+	  if (found!=std::string::npos)
+		std::cout << "second 'needle' found at: " << found << '\n';
+
+	  found=str.find("haystack");
+	  if (found!=std::string::npos)
+		std::cout << "'haystack' also found at: " << found << '\n';
+
+	  found=str.find('.');
+	  if (found!=std::string::npos)
+		std::cout << "Period found at: " << found << '\n';
+
+	  // let's replace the first needle:
+	  str.replace(str.find(str2),str2.length(),"preposition");
+	  std::cout << str << '\n';
+
+	  return 0;
+	}
+
+
+	string (1)    查找 C++ STL容器
+	size_t string.find (const string& str, size_t pos = 0)
+	find是可以规定自己从哪里开始进行寻找的，可以规定开始寻找的位置
+
+	c-string (2)  查找C的字符串
+	size_t find (const char* s, size_t pos = 0) const;
+	注意除了在string中寻找一个string，也可以寻找一个char* 也就是C风格的字符串，但是要注意，是全匹配查找
+
+	string str = "1a2b3c4d5e 6f7g8h 9i1a2b3c4d5 e6f7g8ha9i";
+	std::size_t position = str.find("5",10);
+	if(position != str.npos) cout<<position<<endl;
+	std::size_t position2 = str.find("根本不存在"); 
+	if(position2 != str.npos) cout<<position2<<endl;
+
+	str = "1a2b3c4d5e 6f7g8h 9i1a2b3c4d5 e6f7g8ha9i";
+	char str2find[20] = "e 6";
+	std::size_t pos= str.find(str2find);
+	if(pos != str.npos) cout<<pos<<endl;
+
+	buffer (3)	
+	size_t find (const char* s, size_t pos, size_type n) const;
+	str = "1a2b3c4d5e 6f7g8h 9i1a2b3c4d5 e6f7g8ha9i";
+	strcpy(str2find,"e6");
+	pos= str.find(str2find,0,2);	
+	if(pos != str.npos) {
+		cout<<"结果为:"<<pos<<endl;	
+	}
+	buffer寻找的意思就是在等待查找的字符串中，有多少个元素需要被匹配，本题如果是2，返回的结果就是位置30；如果是1，返回的结果就是位置9,也就是说buffer方法可以限定匹配的长度
+
+	character (4) 也就是查找一个字符
+	size_t find (char c, size_t pos = 0) const noexcept;
+	总结：第一个位置是要查找的字符串，第二个位置是开始匹配的位置，第三个位置是可选的参数，比较匹配的长度是多少
+
+C++中的字符串一般有以下四种类型，
+	string
+	char*
+	const char*
+	char[]
+string是一个C++类库中的一个类，它位于名称空间std中，因此必须使用using编译指令或者std::string来引用它。它包含了对字符串的各种常用操作，它较char*的优势是内容可以动态拓展，以及对字符串操作的方便快捷，用+号进行字符串的连接是最常用的操作
+
+char* 是指向字符串的指针(其实严格来说，它是指向字符串的首个字母)，你可以让它指向一串常量字符串。
+const char * ，指针指向的是一个const char类型，即不能通过当前的指针对字符串的内容作出修改
+char * const [指向字符的静态指针] 前者const修饰的是指针，代表不能改变指针 
+const char * [指向静态字符的指针] 后者const修饰的是char，代表字符不能改变，但是指针可以变，也就是说该指针可以指针其他的const char。
+
+char[]与char*与许多相同点，代表字符数组，可以对应一个字符串，如插入
+char * a="string1";
+char b[]="string2";
+这里a是一个指向char变量的指针，b则是一个char数组（字符数组） 
+但是char*是可以改变自己的指向的，而char[]的改变要通过strcpy函数进行操作
+关于char* 和 char[]的区别——————
+https://blog.csdn.net/ksws0292756/article/details/79432329

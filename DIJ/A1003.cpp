@@ -1,86 +1,85 @@
+//A1003一共是两个问题，最短路径的条数，最短路径的点权最大是多少、 
 #include<iostream>
 #include<vector>
-#include<algorithm>
 #include<cstring>
+#include<string>
+
 using namespace std;
-const int maxn = 1010;
-const int inf = 0x3ffffff;
- 
+const int maxn = 510;
+const int inf  = 0x3ffffff; 
+
 int n,c1,c2,m;
-//最短距离+最大点权
-int G[maxn][maxn]; 
-int d[maxn] ;
-bool vis[maxn] = {false};
-int pre[maxn];
-//p 是从起点到某一个点的点权之和 
-int p[maxn];
-//point是点权 
-int point[maxn];
-//到达某一个点的时候的最短路径的个数 
-int num[maxn]; 
+int G[maxn][maxn];//初始化为inf 
+int d[maxn];  //初始化为inf 
+bool vis[maxn] = {false};//初始化为false 
+int pre[maxn];  //初始化为指向自己 
+//从开始位置到达某一个点的最短路径的个数 
+int num[maxn]={0}; //初始化为0，也就是0条路径， 
+//从开始位置到达某一个点的最大的权重，初始为0 
+int w[maxn] = {0};
+int weight[maxn];
+
+void init(){
+	scanf("%d %d %d %d",&n,&m,&c1,&c2);
+		//这种初始化方式很厉害 
+		//但是一定注意是G[0] ！！！！ 
+	fill(G[0],G[0]+maxn*maxn,inf);
+	for(int i=0;i<maxn;i++){
+		d[i] = inf;
+		pre[i] = i;
+	}
+	for(int i=0;i<n;i++){
+		scanf("%d",&weight[i]);
+	}
+	int a,b,c;
+	for(int i=0;i<m;i++){
+		scanf("%d %d %d",&a,&b,&c);
+		G[a][b] = G[b][a] = c;
+	}
+}
 
 void dij(int s){
 	fill(d,d+maxn,inf);
-	vis[s] = true;
 	for(int i=0;i<n;i++){
-//		这句话不应该声明是inf，否则无法继续下去 
-//		d[i] = inf;
-		pre[i] = i;
+		d[i] = inf;
+		w[i] = 0;
+		num[i] = 0;
 	}
 	d[s] = 0;
-	//
-	for(int i=0;i<n;i++){
+	w[s] = weight[s];
+	num[s] =1;
+	for(int i =0;i<n;i++){
 		int u = -1;
 		int min = inf;
-		//图中的元素的序号是从0开始的
-		//而不是从1开始的 
-		for(int j =0;j<n;j++){
-			if(min > d[j] && vis[j] == false) {
+		for(int j=0;j<n;j++){
+			if(min > d[j] && vis[j]== false){
 				min = d[j];
 				u = j;
 			}
 		}
-		if(u = -1) return;
+		if(u==-1) return;
 		vis[u] = true;
-		for(int v=0;v<n;v++){
-			if(vis[v] == false && G[u][v] != inf){
-				if(d[u] + G[u][v] < d[v]) {
-					//涉及到u作为中间节点的情况 
-					d[u] = d[v] + G[u][v];
-					pre[v] = u;	
+		for(int v= 0;v<n;v++){
+			if(vis[v] == false && G[u][v]!=inf ){
+				if(d[u] + G[u][v] < d[v]){
+		 			d[v] = d[u] + G[u][v];
+		 			w[v] = w[u] + weight[v];
+					pre[v] = u;
 					num[v] = num[u];
-					w[v] = w[u] + weight[v];
 				}
-				else if(d[v]+G[u][v] == d[u]){
-					//除了路径最短，还要求点权最大 
-					if(w[u] + weight[v] > w[v]){
+				else if(d[u] + G[u][v] == d[v]){
+					if(weight[v] + w[u] > w[v])	{
 						w[v] = w[u] + weight[v];
 					}
-					num[v] += num[u];	
+					num[v] += num[u];
 				}
 			}
 		}
 	}
 }
-
 int main(){
-	scanf("%d%d%d%d",&n,&c1,&c2,&m);
-	for(int i=0;i<n;i++){
-		scanf("%d",&point[i]);
-	}
-	int a,b,c;
-	for(int i=0;i<n;i++){
-		for(int j=0;j<n;j++){
-			G[i][j] = G[j][i] = inf;
-		}
-	}
-	for(int i=0;i<m;i++){
-		scanf("%d%d%d",&a,&b,&c); 
-		G[a][b] = G[b][a] = c;
-	}
-	//输入部分完毕
+	init();
 	dij(c1);
-	//输出最短路径的个数 + 点权最大是多少 
-	printf("%d %d\n",num[c2],w[c2]);
+	printf("%d %d\n",num[c2],w[c2]); 
 	return 0;
 }
