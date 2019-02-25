@@ -7,9 +7,7 @@ using namespace std;
 const int maxn = 100100;
 const int inf = 0x3fffff;
 
-void Dijstra(){
-	
-}
+
 
 void Dij(int start){
 	fill(d,d+maxn,INF);
