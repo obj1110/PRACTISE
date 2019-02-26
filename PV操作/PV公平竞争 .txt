@@ -1,3 +1,33 @@
+资源型信号量
+记录型信号量 （整形信号量 ）——信号量的正负有着自己的意义
+AND型信号量（主要是防止发生一个忙等的情况）
+在一个原语中申请整段代码需要的多个临界资源，要么全部分配给它，要么一个都不分配给它。这就是AND型信号量集的基本思想
+
+P的原语操作可以描述为：
+
+procedure P(var s:semaphore);
+
+begin
+
+s.value:=s.value-1;(将信号量值减1)
+
+if s.value<0 then block(s.L);（若信号量值小于0，则调用阻塞原语阻塞自己，插入到阻塞队列中去）
+
+end;
+
+ 
+
+V的原语操作可以描述为：
+
+procedure P(var s:semaphore);
+
+begin
+
+s.value:=s.value+1;(将信号量值加1)
+
+if s.value<0 then wakeup(s.L);（若信号量值小于等于0，则调用唤醒原语从阻塞队列中唤醒一个进程）
+
+
 其实所谓的reader count writer count 都是为了避免多个读者进程或者是多个写者进程同时申请resource的，而不是为了限制读者或者限制写者。
 无论是rmutex还是wmutex都不可作为限制对方的手段，因为这会导致死锁
 
@@ -175,3 +205,354 @@ Note also that this solution can only satisfy the condition that "no thread shal
 不是。这个东西的目的，是避免多个读者反复的申请内存权限，只需要一个读者申请就行了。
 读读读读读写读读读
 在写后面出现的读者都要进队列，这样就非常好了！！！
+
+
+
+==============================================
+哲学家吃饭
+所有人先拿左边的筷子，然后检查右边的筷子能不能拿起来，如果右边的筷子拿不起来就放下左边的筷子，这样最后的结果就是所有人都没饭吃。
+
+A.只允许4个人进去吃饭，这样肯定有一个人可以吃上饭（筷子是5根)
+semaphore chopstick[5]={1，1，1，1，1};
+semaphore room=4; 
+void philosopher(int i) 
+{ 
+	while(true) 
+	{ 
+		think(); 
+		wait(room); //请求进入房间进餐 
+		wait(chopstick[i]); //请求左手边的筷子 
+		wait(chopstick[(i+1)%5]); //请求右手边的筷子 
+		eat(); 
+		signal(chopstick[(i+1)%5]); //释放右手边的筷子 
+		signal(chopstick[i]); //释放左手边的筷子 
+		signal(room); //退出房间释放信号量room 
+	} 
+}
+B．原理：仅当哲学家的左右两支筷子都可用时,才允许他拿起筷子进餐。
+方法1：利用AND 型信号量机制实现：根据课程讲述，在一个原语中，将一段代码同时需 
+要的多个临界资源，要么全部分配给它，要么一个都不分配，因此不会出现死锁的情形。当 
+某些资源不够时阻塞调用进程;由于等待队列的存在，使得对资源的请求满足FIFO 的要求， 
+因此不会出现饥饿的情形。 
+semaphore chopstick[5]={1，1，1，1，1}; 
+void philosopher(int I) 
+{ 
+	while(true) 
+	{ 
+		think(); 
+		Swait(chopstick[(I+1)]%5,chopstick[I]); 
+		eat(); 
+		Ssignal(chopstick[(I+1)]%5,chopstick[I]); 
+	} 
+}
+方法2：利用信号量的保护机制实现。通过信号量mutex对eat（）之前的取左侧和右侧筷 
+子的操作进行保护，使之成为一个原子操作，这样可以防止死锁的出现。 
+伪码： 
+//一个人拿筷子的时候，另外一个人不许拿
+semaphore mutex = 1 ; 
+semaphore chopstick[5]={1，1，1，1，1}; 
+void philosopher(int I) 
+{ 
+	while(true) 
+	{ 
+		think(); 
+		
+		wait(mutex); 
+		wait(chopstick[(I+1)]%5); 
+		wait(chopstick[I]); 
+		signal(mutex); 
+		
+		eat(); 
+		signal(chopstick[(I+1)]%5); 
+		signal(chopstick[I]); 
+	} 
+} 
+C． 原理：规定奇数号的哲学家先拿起他左边的筷子,然后再去拿他右边的筷子;而偶数号 
+的哲学家则相反.按此规定,将是1,2号哲学家竞争1号筷子,3,4号哲学家竞争3号筷子.即 
+五个哲学家都竞争奇数号筷子,获得后,再去竞争偶数号筷子,最后总会有一个哲学家能获 
+得两支筷子而进餐。而申请不到的哲学家进入阻塞等待队列，根FIFO原则，则先申请的哲 
+学家会较先可以吃饭，因此不会出现饿死的哲学家。
+
+semaphore chopstick[5]={1，1，1，1，1}; 
+void philosopher(int i) 
+{ 
+	while(true) 
+	{ 
+		think(); 
+		if(i%2 == 0) //偶数哲学家，先右后左。 
+		{ 
+			wait (chopstick[ i + 1 ] mod 5) ; 
+			wait (chopstick[ i]) ; 
+			eat(); 
+			signal (chopstick[ i + 1 ] mod 5) ; 
+			signal (chopstick[ i]) ; 
+		} 
+		Else //奇数哲学家，先左后右。 
+		{ 
+			wait (chopstick[ i]) ; 
+			wait (chopstick[ i + 1 ] mod 5) ; 
+			eat(); 
+			signal (chopstick[ i]) ; 
+			signal (chopstick[ i + 1 ] mod 5) ; 
+		} 
+	} 
+}
+
+====================================================================================================================
+一个生产者，一个消费者，公用一个缓冲区。
+一个生产者，一个消费者，公用n个环形缓冲区。
+
+in 和 out分别指示的是下一个产品要选择的位置，相当于是循环数组的两个工作指针
+生产者进程
+while(TRUE){
+     生产一个产品;
+     P(empty);
+     产品送往buffer（in）；
+     in=(in+1)mod n；
+	//下一个产品就要放在in +1 的位置，
+     V(full);
+}
+
+消费者进程
+while(TRUE){
+ P(full);
+   从buffer（out）中取出产品；
+   out=(out+1)mod n；
+
+   V(empty);
+   消费该产品;
+}
+
+
+=================================================================
+一组生产者，一组消费者，公用n个环形缓冲区
+    在这个问题中，不仅生产者与消费者之间要同步，而且各个生产者之间、各个消费者之间还必须互斥地访问缓冲区。
+定义四个信号量：
+empty——表示缓冲区是否为空，初值为n。
+full——表示缓冲区中是否为满，初值为0。
+//完全是因为生产者和消费者的数目不止一个，而指针的位置只有一个，就好比很多的读者或者很多的写者。
+mutex1——生产者之间的互斥信号量，初值为1。
+mutex2——消费者之间的互斥信号量，初值为1。
+
+设缓冲区的编号为1～n-1，定义两个指针in和out，分别是生产者进程和消费者进程使用的指针，指向下一个可用的缓冲区。
+生产者进程
+while(TRUE){
+     生产一个产品;
+	//一定要首先申请到资源，然后进行操作，防止发生一个死等的情况
+     P(empty);
+     P(mutex1)；
+     产品送往buffer（in）；
+     in=(in+1)mod n；
+     V(mutex1);
+     V(full);
+}
+消费者进程
+while(TRUE){
+ P(full)
+   P(mutex2)；
+   从buffer（out）中取出产品；
+   out=(out+1)mod n；
+   V（mutex2）；
+   V(empty);
+   消费该产品;
+   }
+
+===================================================
+儿子苹果，闺女橘子
+sema mutex = 1;
+sema apple = 0;
+sema orange = 0;
+
+father(){
+	mutex.p();
+	if(isapple) apple.v();
+	else if(isorange) orange.v();
+} 
+son(){
+	apple.p();	
+	mutex.v();
+}
+daughter(){
+	orange.p();	
+	mutex.v();
+}
+=====================================================
+AC互斥，BD互斥，ABCD可以多文件读取file
+sema ac =1;
+sema bd = 1;
+A(){
+	ac.p();
+	ac.v();
+}
+B(){
+	bd.p();
+	bd.v();
+}
+=====================================================
+100个座位可供读书，但是要进行登记
+semaphore readcount = 100;
+sema counter = 1;
+reader(){
+	readcount.p();
+	counter.p();
+	reading_progress
+	counter.v();
+	readcount.p();
+}
+====================================================
+接力赛跑
+Sema a = 1;
+Sema b = 0;
+Sema c = 0;
+Sema d = 0;
+P1{
+	P(a);
+	V(b);
+}
+P2{
+	P(b);
+	V(c);
+}
+P3{
+	P(C);
+	V(D);
+}
+====================================================
+在公共汽车上，司机和售票员各行其职，司机负责开车和到站停车；售票员负责售票和开、关车门；当售票员关好车门后驾驶员才能开车行驶。试用wait和signal操作实现司机和售票员的同步。
+sema door = 0;
+sema drive = 0;
+conductor(){
+	V(door);
+	P(drive);
+}
+driver(){
+	P(door);
+	V(drive);
+}
+====================================================
+假设有3个并发进程P，Q，R，其中P负责从输入设备上读入信息，并传送给Q,Q将信息加工后传送给R，R负责打印输出。进程P，Q共享一个有m个缓冲区组成的缓冲池；进程Q，R共享一个有n个缓冲区组成的缓冲池（假设缓冲池足够大，进程间每次传输信息的单位均小于等于缓冲区长度），请写出满足上述条件的并发程序。
+sema s1full = 0 ;
+sema s1empty = m;
+sema s2full = 0;
+smea s2empty = n;
+sema mutexS1 = 1;
+sema mutexS2 = 1;
+像上面那种什么接力棒类型的题目，就没必要涉及到什么mutex了，包括一个消费者一个生产者这种，也不用mutex
+即使是生产消费也是要empty和full两个信号量一起来的
+P{
+	
+	s1empty.p();
+		mutexs1.p();
+		mutexs1.v();
+	s1full.v();
+	
+}
+Q{
+	
+	s1full.p()
+		mutexs1.p()；
+		<从缓冲区中取出数据>
+		mutexs1.v();
+	s1empty.v();
+	
+	<数据处理〉
+	
+	s2empty.p();
+		mutexs2.p();
+		 <处理后的数据放入缓冲区>
+		mutexs2.v();
+	s2full.v();
+	
+}
+R{
+
+	s2full.p();
+		mutexs2.p();
+		   <把数据送入打印机完成打印>;
+		mutexs2.v();
+	s2empty.v();
+	
+}
+//一定要注意，是先申请资源，然后在进行操作，这也就是资源信号量和临界区信号量之间的差别啊
+
+===============================================================
+有一只铁笼子，每次只能放入一只动物，猎手向笼子里放入老虎，农民向笼子里放入猪；动物园等待取笼子里的老虎，饭店等待取笼子里的猪。现请用wait和signal操作写出能同步执行的程序
+
+sema mutex = 1;//应该说主要的作用是控制count的变化
+int count = 0;
+sema pig = 0 ;
+sema tiger = 0;
+god(){
+	mutex.p();
+	if(!count){
+		count++;
+		if(ispig){
+			pig.p();
+		}
+		else{
+			tiger.p();
+		}
+		count++;
+	}
+	mutex.v();
+}
+
+resterant(){
+	mutex.p();
+	if(count) 
+	{	
+		pig.v();
+		count--;
+	}
+	
+	mutex.v();
+}
+zoo(){
+	mutex.p();
+	if(count) 
+	{	
+		tiger.v();
+		count--;
+	}
+	mutex.v();
+}
+
+
+semaphore empty = 1;
+semaphore tiger =0 ;
+semaphore pig = 0;
+hunter(){
+	P(empty);
+	V(pig);
+}
+farmer(){
+	P(empty);
+	V(tiger);
+}
+res(){
+	P(pig);
+	V(empty);
+}
+zoo(){
+	P(tiger);
+	V(empty);
+}
+
+死等状态：（这个东西到最后也没有自己的资源，最后会饿死的）
+进程在有限时间内根本不能进入临界区，而一直在尝试进入，陷入一种无结果的等待状态。
+（没有进入临界区的正在等待的某进程根本无法获得临界资源而进入进程，这种等待是无结果的，是死等状态～）-> 这个时候应该放弃这个无结果的事情，保证自己等待的时间是有限的
+
+忙等状态：（这个东西表现就是在程序控制信号量的时候不断的出现一个while循环进行测试）（如果不采用信号量是解决不了的）
+当一个进程正处在某临界区内，任何试图进入其临界区的进程都必须进入代码连续循环，陷入忙等状态。连续测试一个变量直到某个值出现为止，称为忙等。
+（没有进入临界区的正在等待的某进程不断的在测试循环代码段中的变量的值，占着处理机而不释放，这是一种忙等状态～）-> 这个时候应该释放处理机让给其他进程
+
+有限等待：对要求访问临界资源的进程，应保证有限时间内能进入自己的临界区，以免陷入“死等”状态～（受惠的是进程自己）
+
+让权等待：当进程不能进入自己的临界区时，应立即释放处理机，以免进程陷入“忙等”状态～（受惠的是其他进程）
+--------------------- 
+作者：柳婼 
+来源：CSDN 
+原文：https://blog.csdn.net/liuchuo/article/details/51986201 
+版权声明：本文为博主原创文章，转载请附上博文链接！
+
+AND型信号量 主要就是你需要的资源我一次性都分配给你这种，肯定是要遵守让权等待的。
