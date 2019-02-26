@@ -35,9 +35,16 @@ int main ()
   
   return 0;
 }
-7. substr(size_t start_position,size_t length)也就是一个字符串分割函数
+7. substr(size_t start_position,size_t length)也就是一个字符串分割函数，第二个参数是length；
+
+string str1 = "justin is lonely";
+string str2 = str1.substr(0,10);
+cout<<str2;
+绝大多数的容器函数的第一个参数都是迭代器或者是开始操作的位置，而第二个参数一般都是待操作的数据的长度
 
 8. char * strcpy ( char * destination, const char * source );   返回的结果是一个指向destination的指针
+第一位的数据是目的地，第二位的数据是数据源
+字符数组的拷贝，由于是涉及到了内存的，所以一定要用strcpy
 /* strcpy example */
 #include <stdio.h>
 #include <string.h>
@@ -189,3 +196,11 @@ https://blog.csdn.net/ksws0292756/article/details/79432329
 	指针也是一个变量 ， 如上int* p = &i , p就是一个指针变量 ， 这个变量存储的就是i变量的内存地址
 	 指针变量的强大之处就在于 ， 他能通过内存地址去操作对应内存地址的内容 
 	 *pt = 20 就是通过更改内存，更改pt所指向的内存的数值为20，也就是间接更改了指针所指向的变量的值。
+
+string的erase操作：
+sequence (1)    起点和长度
+ string& erase (size_t pos = 0, size_t len = npos);
+character (2)	某个字符
+iterator erase (const_iterator p);
+range (3)	    某个范围的字符
+iterator erase (const_iterator first, const_iterator last); 

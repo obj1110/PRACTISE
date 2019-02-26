@@ -150,7 +150,14 @@ int main ()
   return 0;
 }
 
-一种简单的容器输出
+一种简单的容器输出，不需要复杂的狗屎iterator
 for(auto& x:containername){
 	cout<<x<<endl;
 }
+for（auto& x:map_mp){
+	cout<<x.first<<" "<<x.second<<endl; 
+}//map包含了两个部分，一部分是key，另外一部分是value。
+
+vector.begin .end返回的是开始和结束位置的两个指针 
+.front .rear返回的是开始和结束为止的元素的值
+

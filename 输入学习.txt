@@ -1,16 +1,13 @@
-getline根据指定的分割符号进行读取
-istream& getline (istream&  is, string& str, char delim);
-其中is是输入的流，str是要输出的字符串，delimiter是分割符号
+1. getline根据指定的分割符号进行读取
+istream& getline (istream&  is, string& str, char delimter);
 所以，可以用来读取整行整行的输入
-而getline会吸收并且丢弃最后的delimiter
+而cin.getline(char [],int length,const char * delimiter)会吸收并且丢弃最后的delimiter,而cin也是遇换行符停止，但不丢弃delimiter，所以要额外使用getchar吸收空格。
 
-而cin虽然也是遇到换行符就停止，但是不会丢弃任何停止的符号，所以要额外使用getchar吸收空格
-
-fgets根据固定的长度或者是指定的delimiter进行分割
+2. fgets根据固定的长度或者是指定的delimiter进行分割
 char * fgets ( char * str, int num, FILE * stream );
 
-
-准确的说，sscanf不是一个读取输入输出的，而是一个对字符串进行操作的函数
+3. 准确的说，sscanf不是一个读取输入输出的，而是一个对字符串进行操作的函数
+//似乎是加一个*号会使得这部分对应截取出来的东西被抛弃
 /* sscanf example */
 #include <stdio.h>
 
@@ -27,39 +24,53 @@ int main ()
 }
 
 着重区分iostream::getline 和 string的getline方法
-string大类的是——————istream& getline (istream&  is, string& str, char delim);
-iostream大类的是——————istream& getline (char* s, streamsize n, char delim );
+istream& getline (istream&  is, string& str, char delim);【string】
+istream& getline (char* s, streamsize n, char delim );【iostream】
 
 // istream::getline example
 #include <iostream>     // std::cin, std::cout
-
 int main () {
   char name[256], title[256];
-
+  
   std::cout << "Please, enter your name: ";
   std::cin.getline (name,256);
-
+  
   std::cout << "Please, enter your favourite movie: ";
   std::cin.getline (title,256);
-
+  
   std::cout << name << "'s favourite movie is " << title;
-
-  return 0;
 }
 
 // extract to string
 #include <iostream>
 #include <string>
-
 int main ()
 {
-  std::string name;
-
+  std::string name；
   std::cout << "Please, enter your full name: ";
   std::getline (std::cin,name);
   std::cout << "Hello, " << name << "!\n";
-
   return 0;
 }
 
 比较直观的区别就是一个是getline，另外一个是cin.getline 
+cin.getline要指明数据的去向，string的getline要指明数据的来源
+
+sscanf是将一个字符串按照规定的结构进行拆分，而sprintf是根据规定的格式，将一些元素组合成一个字符串。
+
+更加深入的说，其实sscanf和 sprintf是将本来的输入和输出进行了重定向工作。
+#include <iostream>
+#include <cstdlib> 
+using namespace std;
+int main ()
+{
+  char sentence []="Rudolph is 12 years old";
+  char str [20],str1[20],str2[20];
+  int i;
+  //将字符串进行拆解 
+  sscanf (sentence,"%s %s %d",str,str1,&i);
+  cout<<str<<" "<<str1<<" " <<i<<endl;
+  //重组字符串 
+  sprintf(str2,"%s-%s-%d",str,str1,i);
+  cout<<str2<<endl;
+}
