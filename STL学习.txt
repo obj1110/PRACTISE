@@ -117,3 +117,40 @@ int main ()
 
   return 0;
 }
+
+emplace的学习
+因为vector的底层是数组，然后insert会引起底层元素的大量移动，很不方便，甚至会超过capacity而越界。
+这种情况下，emplace相对与insert来说是非常合适的一种选项。也就是一种安全的insert
+
+这么理解吧，emplace后面的位置迭代器参数就是你要插入的元素出现的位置，比如说是begin,那就是插入之后出现在begin位置，
+如果说是begin()+1，那就是说，插入之后出现在第二个位置上。如果是end，那就是说插入之后出现在最后的位置上。
+emplace返回的是插入位置的迭代器。
+auto iterator = array.emplace(array.begin()+2,value2insert);
+//	iterator equals the array.begin()+2
+array.emplace(iteator,value2insert); 
+
+
+// vector::emplace
+#include <iostream>
+#include <vector>
+
+int main ()
+{
+  std::vector<int> myvector = {10,20,30};
+
+  auto it = myvector.emplace ( myvector.begin()+1, 100 );
+  myvector.emplace ( it, 200 );
+  myvector.emplace ( myvector.end(), 300 );
+
+  std::cout << "myvector contains:";
+  for (auto& x: myvector)
+    std::cout << ' ' << x;
+  std::cout << '\n';
+
+  return 0;
+}
+
+一种简单的容器输出
+for(auto& x:containername){
+	cout<<x<<endl;
+}
