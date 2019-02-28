@@ -1,8 +1,24 @@
 STL专门
 
 1. 使用begin和end之前都是要首先使用empty判断是不是空的，只有不空的集合才可以进行元素的输入和输出
-同样的，使用front或者是end的时候，也要判空。
+同样的，使用front或者是end的时候，也要判空。注意所有的begin和end对于容器的作用都是返回一个迭代器
+for(auto & x:container){
+	cout <<*x;
+}
+//
+而begin和 end函数也可以对数组进行操作，返回的是一个指向某一个开始和结束位置的指针。
 
+container (1)	
+template <class Container>
+  auto begin (Container& cont) -> decltype (cont.begin());
+template <class Container>
+  auto begin (const Container& cont) -> decltype (cont.begin());
+array (2)	
+template <class T, size_t N>
+  T* begin (T(&arr)[N]);
+
+  <iterator> <array> <deque> <forward_list> <list> <map> <regex> <set> <string> <unordered_map> <unordered_set> <vector> 
+  
 2. int set.count(int value)返回value在set中出现的次数情况   Returns the number of elements in the range [first,last) that compare equal to val.【适用于所有的容器】
 
 3. 一般STL中的结果都是左闭右开的，比如说lower_bound是左闭，也就是第一个大于等于key的元素的位置，比如说upper_bound是右开，也就是第一个大于key元素的位置。
@@ -161,3 +177,36 @@ for（auto& x:map_mp){
 vector.begin .end返回的是开始和结束位置的两个指针 
 .front .rear返回的是开始和结束为止的元素的值
 
+list是一种序列式容器。list容器完成的功能实际上和数据结构中的双向链表是极其相似的，list中的数据元素是通过链表指针串连成逻辑意义上的线性表，也就是list也具有链表的主要优点，即：在链表的任一位置进行元素的插入、删除操作都是快速的。list的实现大概是这样的：list的每个节点有三个域：前驱元素指针域、数据域和后继元素指针域。前驱元素指针域保存了前驱元素的首地址；数据域则是本节点的数据；后继元素指针域则保存了后继元素的首地址。其实，list和循环链表也有相似的地方，即：头节点的前驱元素指针域保存的是链表中尾元素的首地址，list的尾节点的后继元素指针域则保存了头节点的首地址，这样，list实际上就构成了一个双向循环链。由于list元素节点并不要求在一段连续的内存中，显然在list中是不支持快速随机存取的，因此对于迭代器，只能通过“++”或“--”操作将迭代器移动到后继/前驱节点元素处。而不能对迭代器进行+n或-n的操作，这点，是与vector等不同的地方。
+
+build-in数组C++
+作为函数参数进行传递，void func(int args[])
+int array[40];
+func(array);本质上是将数组的地址进行传递。而不是将整个内存进行传递。
+多维数组的参数传递
+void func(int array[][3][4])
+上面这些东西都是从C语言继承过来的，而C++有一个build in的数组类型就是<array>类型。
+
+count(st.begin(),st.end(),q_value);
+count本身是非常好用的，三部分参数都合理。
+st.erase(st.begin(),st.end())
+st.erase(value)
+
+find方法
+mp.find(q_key)->first 
+mp.find(q_key)->second 
+//因为mp返回的是容器的迭代器，所以要用.或者是->来操作
+iterator find (const key_type& k);
+
+//string类型返回的也是迭代器？？？？？？
+string (1)	
+size_t find (const string& str, size_t pos = 0) const noexcept;
+c-string (2)	
+size_t find (const char* s, size_t pos = 0) const;
+buffer (3)	
+size_t find (const char* s, size_t pos, size_type n) const;
+character (4)	
+size_t find (char c, size_t pos = 0) const noexcept;
+
+比较正常的find都是开始位置，结束位置，和目标数值，返回一个迭代器，对于string比较特殊，返回一个size_t作为位置；
+然而size_t在string中也是迭代器一般的存在，所以不用担心了

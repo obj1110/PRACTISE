@@ -521,3 +521,31 @@ cout << "Error in program.\n";
 //也就是goto语句非常的适合在嵌套中，一夜回到解放前中进行使用。也就是退出深嵌套循环。
 
 3. malloc 和  free  new 和 delete是两大搭配
+
+4  冒泡排序外层时次数，内层是遍历的次序，因为冒泡每次排序结束之后，都会将一个最大的元素放到队尾，
+所以j是从0到n-i-1的位置。
+
+strcmp主要是用于字符数组，然后返回0表示匹配，返回正或者负都表示一个大小的差别
+struct node{
+	int grade;
+	char name[20];
+	int age;
+};
+bool cmp(node a,node b){
+	if(a.grade != b.grade){
+		return a.grade < b.grade;
+	}
+	
+	int tmp = strcmp(a.name,b.name);
+	if(tmp!=0) return tmp<0;
+	
+	else return a.age < b.age;
+}
+bool cmp(node a,node b){
+	if(a.score != b.score){
+		return a.score > b.score;
+	}
+	else if(strcmp(a.name,b.name) !=0) return strcmp(a.name,b.name) < 0;
+	else return a.age < b.age; 
+}
+

@@ -127,12 +127,12 @@ substr() – 返回某个子字符串
 
 	string (1)    查找 C++ STL容器
 	size_t string.find (const string& str, size_t pos = 0)
-	find是可以规定自己从哪里开始进行寻找的，可以规定开始寻找的位置
-
+	对string串，从位置pos开始寻找str第一次出现位置，注意，一定要将结构和string.npos进行比较
+	
 	c-string (2)  查找C的字符串
 	size_t find (const char* s, size_t pos = 0) const;
-	注意除了在string中寻找一个string，也可以寻找一个char* 也就是C风格的字符串，但是要注意，是全匹配查找
-
+	注意除了在string中寻找一个string，也可以寻找一个char* 也就是C风格的字符串，但是要注意，是全匹配查找	
+	
 	string str = "1a2b3c4d5e 6f7g8h 9i1a2b3c4d5 e6f7g8ha9i";
 	std::size_t position = str.find("5",10);
 	if(position != str.npos) cout<<position<<endl;
@@ -158,6 +158,44 @@ substr() – 返回某个子字符串
 	size_t find (char c, size_t pos = 0) const noexcept;
 	总结：第一个位置是要查找的字符串，第二个位置是开始匹配的位置，第三个位置是可选的参数，比较匹配的长度是多少
 
+	// string::find
+#include <iostream>       // std::cout
+#include <string>         // std::string
+
+int main ()
+{
+  std::string str ("There are two needles in this haystack with needles.");
+  std::string str2 ("needle");
+
+  // different member versions of find in the same order as above:
+  std::size_t found = str.find(str2);
+  if (found!=std::string::npos)
+    std::cout << "first 'needle' found at: " << found << '\n';
+
+  found=str.find("needles are small",found+1,6);
+  //给你一个串，开始查找的位置和最低匹配的长度，也就是说啊，我们不用全部都匹配，匹配到最低限度就行了
+  if (found!=std::string::npos)
+    std::cout << "second 'needle' found at: " << found << '\n';
+
+//每次比较都要跟npos来比较，因为查找不到就会返回字符串的最后一位位置，也就是npos位置。
+//所以，结果只有跟npos不一样的时候，才会返回
+  found=str.find("haystack");
+  if (found!=std::string::npos)
+    std::cout << "'haystack' also found at: " << found << '\n';
+
+  found=str.find('.');
+  if (found!=std::string::npos)
+    std::cout << "Period found at: " << found << '\n';
+
+  // let's replace the first needle:
+  //从哪里开始，匹配多长
+  str.replace(str.find(str2),str2.length(),"preposition");
+  std::cout << str << '\n';
+
+  return 0;
+}
+	
+	
 C++中的字符串一般有以下四种类型，
 	string
 	char*
@@ -204,3 +242,55 @@ character (2)	某个字符
 iterator erase (const_iterator p);
 range (3)	    某个范围的字符
 iterator erase (const_iterator first, const_iterator last); 
+
+关于字母序的比较，最简单的无论是char array[]还是string都可以直接利用大于或者是小于进行比较。
+然后也可以用strcmp进行比较，这种比较方式返回的结果包括大于等于或者是小于0.
+
+
+
+字符串数组的初始化操作
+#include<iostream>
+#include<cstring>
+using namespace std;
+int main(){
+	char index[8][8]={};
+	for(int i=0;i<8;i++){
+		for(int j=0;j<8;j++){
+			cout<<index[i]<<endl;
+		}
+	}
+}
+
+
+std::string.substr 更多的是string类型下属的一个方法
+其中，substr的两个参数一个是begin,一个是length
+string substr (size_t pos = 0, size_t len = npos) const;
+关于string，很重要的一个参数就是npos参数，其中呢，第一个应用是find，find的结果应该直接和string.npos进行比较 ，从而判断找到的位置是不是合适的。
+
+关于char array[]的substr我目前没有找到任何合适的例子
+
+char *strtok(char *str, const char *delim ；                似乎是对于字符数组进行分割的一个方式
+size_t find ( const string& str, size_t pos = 0 ) const;    找到某一个子串在字符串string中的位置
+string substr ( size_t pos = 0, size_t n = npos ) const;    进行字符串的分割
+vector<string> split(string str,string pattern);            感觉像是一个正则化的匹配啊
+
+#include<iostream> 
+#include<cstring>
+#include<cstdlib>
+using namespace std;
+int main(){
+	char str[] ="a,sd,f,g,g,h,j";
+	char *p;
+	p = strtok(str,",");
+	cout<<*p<<endl;
+	while(p!=NULL){
+		p = strtok(NULL,",");
+		cout<<*p<<endl;
+	}	
+}
+
+关于字符串分割，掌握两种方式，一种是C语言形式的字符串strtok()操作，一种是C++语言形式的string操作
+
+主要就是一个
+字符指针 = strtok(字符串,字符常量);
+while(字符串不为空) 字符指针 = strtok(NULL,字符常量);

@@ -1,114 +1,40 @@
-#include<iostream>
+//判断是不是二叉排序树，主要的方式进行一个前序中序或者是后序的遍历操作 
+//本题的问题就是判断一个二叉树是不是一个BST，或者说 mmmmmmmm65we88fc  
+#include<iostream> 
+#include<cstring>
 #include<vector>
+//交换二叉排序树的左右子树得到的是二叉排序树的镜像
+//给出一个整数序列，然后判断这个序列是不是一个二叉排序树的前序或者是后续的序列
+//或者判断这个序列是不是一个二叉排序树的镜像树的前序或者是后续的遍历结果 
 
 using namespace std;
-struct node{
-	int data;
-	node*left,*right;
-};
 
-void insert(node* &root,int data){
-	if(root == NULL){
-		root = new node;
-		root->data = data;
-		root->left = root->right =NULL;
-		return ;
-	}
-	else{
-		if(data < (root->data)) insert(root->left,data);
-		else if(data >= (root->data)) insert(root->right,data);
-		//注意，千万不要忽视等于的情况 
-	}
-}
+//假设它是二叉搜索树，一开始isMirror为FALSE，
+//根据二叉搜索树的性质将已知的前序转换为后序，
+//转换过程中，如果发现最后输出的后序数组长度不为n，
+//那就设isMirror为true，然后清空后序数组，
+//重新再转换一次（根据镜面二叉搜索树的性质），
+//如果依旧转换后数组大小不等于n，就输出no否则输出yes
 
-void preorder(node *root,vector<int>& a){
-	if(root == NULL) return ;
-	a.push_back(root->data);
-	preorder(root->left,a); 
-	preorder(root->right,a);
-}
+const int maxn = 1000100;
 
-void postorder(node* root,vector<int>& a){
-	if(root ==NULL) return ;
-	postorder(root->left,a);
-	postorder(root->right,a); 
-	a.push_back(root->data); 
-}	
+bool isMirror;
+vector<int> pre,post; 
 
-void preorderm(node *root,vector<int>& a){
-	if(root == NULL) return ;
-	a.push_back(root->data);
-	preorderm(root->right,a);
-	preorderm(root->left,a);
+//给出一个数组的前后界限 
+void getpost(int root,int tail){
+	if(root > tail ) return;
+	int i = root +1, j = tail;
+	//如果不是镜像树 
+	if(!isMirror) {
+		
+	} 
+	//如果是镜像树
+	else if(isMirror){
+		while( i<= tail  && pre[root] )
+	} 
 }
-void postorderm(node *root,vector<int>& a){
-	if(root ==NULL) return ;
-	postorderm(root->right,a);
-	postorderm(root->left,a);
-	a.push_back(root->data);
-}
-vector<int> origin,pre,prem,post,postm;
 
 int main(){
-	int n,data;
-	node *root = NULL;
-	scanf("%d",&n);
 	
-	for(int i =0;i<n;i++){
-		scanf("%d",&data);
-		//把数据存储在数组中 
-		origin.push_back(data);
-		//给根节点插入元素 
-		insert(root,data);
-	}
-	
-	preorder(root,pre);
-	preorderm(root,prem);
-	postorder(root,post);
-	postorderm(root,postm);
-	
-//	for(int i=0;i<origin.size();i++){
-//		printf("%d",origin[i]);
-//		if(i!=-1) printf(" ");
-//	}
-//	cout<<endl<<"-------"<<endl;
-//	for(int i=0;i<pre.size();i++){
-//		printf("%d",pre[i]);
-//		if(i!=-1) printf(" ");
-//	}
-//	cout<<endl<<"-------"<<endl;
-//	for(int i=0;i<prem.size();i++){
-//		printf("%d",prem[i]);
-//		if(i!=-1) printf(" ");
-//	}
-//	cout<<endl<<"-------"<<endl;
-//	for(int i=0;i<post.size();i++){
-//		printf("%d",post[i]);
-//		if(i!=-1) printf(" ");
-//	}
-//	cout<<endl<<"-------"<<endl;
-//	for(int i=0;i<postm.size();i++){
-//		printf("%d",postm[i]);
-//		if(i!=-1) printf(" ");
-//	}
-	
-	
-	if(origin == pre){
-		printf("YES\n");
-		for(int i=0;i<post.size();i++){
-			printf("%d",post[i]);
-			if(i<post.size()-1) printf(" ");
-		}
-		return 0;
-	}
-	else if(origin == prem){
-		printf("YES\n");
-		for(int i=0;i<postm.size();i++){
-			printf("%d",postm[i]);
-			if(i<postm.size()-1) printf(" ");
-		}
-		return 0;
-	}
-	else printf("NO\n");
-	return 0;
 }
