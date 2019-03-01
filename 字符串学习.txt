@@ -294,3 +294,4 @@ int main(){
 主要就是一个
 字符指针 = strtok(字符串,字符常量);
 while(字符串不为空) 字符指针 = strtok(NULL,字符常量);
+
